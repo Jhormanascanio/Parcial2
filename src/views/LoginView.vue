@@ -1,36 +1,71 @@
 <template>
-  <div class="container py-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card shadow-sm">
-          <div class="card-body">
-            <h3 class="card-title mb-4">Iniciar sesión</h3>
+  <div class="login-container">
+    <div class="container py-5">
+      <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-5">
+          <div class="card shadow-lg border-0">
+            <div class="card-body p-5">
+              <div class="text-center mb-4">
+                <h2 class="fw-bold text-primary">🌴 Trópico Rebelde</h2>
+                <p class="text-muted">Moda con Actitud</p>
+              </div>
 
-            <div v-if="alert.message" :class="`alert alert-${alert.type}`" role="alert">
-              {{ alert.message }}
+              <!-- Alerta de validación -->
+              <div v-if="alert.message" :class="`alert alert-${alert.type} alert-dismissible fade show`" role="alert">
+                {{ alert.message }}
+                <button type="button" class="btn-close" @click="alert.message = ''" aria-label="Close"></button>
+              </div>
+
+              <form @submit.prevent="handleLogin" novalidate>
+                <div class="mb-3">
+                  <label for="username" class="form-label fw-semibold">Usuario</label>
+                  <input 
+                    id="username" 
+                    v-model="credentials.username" 
+                    type="text" 
+                    class="form-control form-control-lg" 
+                    placeholder="Ingrese su usuario"
+                    required 
+                  />
+                </div>
+
+                <div class="mb-4">
+                  <label for="password" class="form-label fw-semibold">Contraseña</label>
+                  <input 
+                    id="password" 
+                    v-model="credentials.password" 
+                    type="password" 
+                    class="form-control form-control-lg" 
+                    placeholder="Ingrese su contraseña"
+                    required 
+                  />
+                </div>
+
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary btn-lg" :disabled="loading">
+                    <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    {{ loading ? 'Validando...' : 'Iniciar Sesión' }}
+                  </button>
+                </div>
+              </form>
+
+              <hr class="my-4" />
+              
+              <div class="bg-light p-3 rounded">
+                <p class="small mb-2 fw-semibold">Credenciales de prueba:</p>
+                <ul class="small mb-0">
+                  <li><strong>admin</strong> / admin123</li>
+                  <li><strong>vendedor</strong> / vendedor123</li>
+                  <li><strong>demo</strong> / demo123</li>
+                </ul>
+              </div>
+
+              <div class="mt-3">
+                <p class="small text-muted text-center mb-0">
+                  ⚠️ <em>Nota educativa:</em> Esta validación usa JSON local y no representa un sistema de autenticación real.
+                </p>
+              </div>
             </div>
-
-            <form @submit.prevent="onSubmit" novalidate>
-              <div class="mb-3">
-                <label for="username" class="form-label">Usuario</label>
-                <input id="username" v-model="credentials.username" type="text" class="form-control" required />
-              </div>
-
-              <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input id="password" v-model="credentials.password" type="password" class="form-control" required />
-              </div>
-
-              <div class="d-grid">
-                <button class="btn btn-primary" :disabled="loading">
-                  <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                  Entrar
-                </button>
-              </div>
-            </form>
-
-            <hr />
-            <p class="small text-muted">Credenciales de ejemplo: <strong>admin / admin123</strong> o <strong>user / user123</strong></p>
           </div>
         </div>
       </div>
@@ -41,39 +76,70 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import usuariosData from '../data/usuarios.json'
 
 const router = useRouter()
 const credentials = ref({ username: '', password: '' })
 const loading = ref(false)
 const alert = ref({ message: '', type: 'danger' })
 
-async function onSubmit() {
+async function handleLogin() {
+  // Limpiar alertas previas
   alert.value = { message: '', type: 'danger' }
-  if (!credentials.value.username || !credentials.value.password) {
-    alert.value = { message: 'Por favor complete el usuario y la contraseña.', type: 'warning' }
+
+  // Validar campos vacíos
+  if (!credentials.value.username.trim() || !credentials.value.password.trim()) {
+    alert.value = { 
+      message: 'Por favor complete todos los campos.', 
+      type: 'warning' 
+    }
     return
   }
 
   loading.value = true
-  try {
-    // usuarios.json ubicado en la carpeta `public` (ruta relativa al servidor)
-    const res = await fetch('/usuarios.json', { cache: 'no-store' })
-    if (!res.ok) throw new Error('No se pudo cargar la lista de usuarios')
-    const users = await res.json()
 
-    const found = users.find(u => u.username === credentials.value.username && u.password === credentials.value.password)
-    if (found) {
-      alert.value = { message: `Bienvenido ${found.name}. Redirigiendo...`, type: 'success' }
-      // pequeña espera para mostrar el mensaje
+  // Simular delay de red (opcional, para UX)
+  await new Promise(resolve => setTimeout(resolve, 800))
+
+  try {
+    // Buscar usuario en el JSON
+    const usuario = usuariosData.usuarios.find(
+      u => u.username === credentials.value.username && 
+           u.password === credentials.value.password
+    )
+
+    if (usuario) {
+      // Credenciales correctas
+      alert.value = { 
+        message: `✅ Bienvenido ${usuario.nombre}! Redirigiendo al dashboard...`, 
+        type: 'success' 
+      }
+
+      // Guardar sesión en localStorage
+      localStorage.setItem('user', JSON.stringify({
+        id: usuario.id,
+        username: usuario.username,
+        nombre: usuario.nombre,
+        rol: usuario.rol
+      }))
+
+      // Redirigir al dashboard después de mostrar mensaje
       setTimeout(() => {
         router.push('/dashboard')
-      }, 700)
+      }, 1500)
     } else {
-      alert.value = { message: 'Credenciales inválidas. Intente nuevamente.', type: 'danger' }
+      // Credenciales incorrectas
+      alert.value = { 
+        message: '❌ Usuario o contraseña incorrectos. Intente nuevamente.', 
+        type: 'danger' 
+      }
     }
-  } catch (err) {
-    console.error(err)
-    alert.value = { message: 'Error al validar. Revise la consola.', type: 'danger' }
+  } catch (error) {
+    console.error('Error en login:', error)
+    alert.value = { 
+      message: 'Error al procesar el login. Consulte la consola.', 
+      type: 'danger' 
+    }
   } finally {
     loading.value = false
   }
@@ -81,5 +147,23 @@ async function onSubmit() {
 </script>
 
 <style scoped>
-.card { border-radius: 0.6rem; }
+.login-container {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  min-height: 100vh;
+}
+
+.card {
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}
+
+.btn-primary {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
 </style>

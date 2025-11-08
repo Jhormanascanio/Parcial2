@@ -1,0 +1,25 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "nombre": "Administrador",
+      "rol": "admin"
+    },
+    {
+      "id": 2,
+      "username": "vendedor",
+      "password": "vendedor123",
+      "nombre": "Juan Pérez",
+      "rol": "vendedor"
+    },
+    {
+      "id": 3,
+      "username": "demo",
+      "password": "demo123",
+      "nombre": "Usuario Demo",
+      "rol": "usuario"
+    }
+  ]
+}

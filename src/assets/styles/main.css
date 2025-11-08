@@ -1,0 +1,73 @@
+/* Variables personalizadas para Fashion Store - Tienda de Ropa */
+:root {
+  --primary-color: #ec4899;
+  --secondary-color: #be185d;
+  --accent-color: #f9a8d4;
+  --dark-bg: #1f2937;
+  --light-bg: #fdf2f8;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --border-color: #fce7f3;
+  --success-color: #10b981;
+  --danger-color: #ef4444;
+  --warning-color: #f59e0b;
+  --fashion-gold: #fbbf24;
+}
+
+/* Tipografía */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
+  background-color: var(--light-bg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Botones personalizados */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+/* Tarjetas */
+.card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Navegación */
+.nav-link {
+  transition: all 0.3s ease;
+}
+
+/* Tablas */
+.table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Animaciones suaves */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
