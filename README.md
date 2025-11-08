@@ -1,5 +1,11 @@
 # 🌴 Trópico Rebelde - Tienda de Ropa Online# 👗 Fashion Store - Aplicación Web con Vue 3 y Bootstrap 5.3
 
+<<<<<<< HEAD
+=======
+Proyecto: Tienda de ropa (ejemplo)
+
+Este repositorio contiene la estructura inicial y componentes para el segundo parcial: una aplicación web modularizada usando Vue 3 y Bootstrap 5. El proyecto está orientado a una tienda de ropa — campos de producto incluyen título, precio, talla y color — y está pensado como evidencia educativa.
+>>>>>>> 83219ff927eb918c061175c01cf2571805142c7c
 
 
 ## 📋 Índice## 📋 Descripción General
